@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DNS Lookup</title>
+    <style>
+        body { font-family: Arial; padding: 30px; }
+        input, button { padding: 8px; font-size: 14px; }
+        .record { margin-top: 15px; }
+        .type { font-weight: bold; margin-top: 10px; }
+        pre { background: #f4f4f4; padding: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>DNS Lookup</h2>
+
+<input id="domain" placeholder="example.com">
+<button onclick="lookup()">Lookup</button>
+
+<div id="results"></div>
+
+<script>
+async function lookup() {
+    const domain = document.getElementById("domain").value;
+    const container = document.getElementById("results");
+
+    container.innerHTML = "Loading...";
+
+    try {
+        const res = await fetch(`/dns?domain=${domain}`);
+        const data = await res.json();
+
+        container.innerHTML = "";
+
+        const records = data.records;
+
+        // Sort record types alphabetically
+        const sortedTypes = Object.keys(records).sort();
+
+        sortedTypes.forEach(type => {
+            const value = records[type];
+
+            // Skip empty/null
+            if (!value || (Array.isArray(value) && value.length === 0)) return;
+
+            const div = document.createElement("div");
+            div.className = "record";
+
+            const title = document.createElement("div");
+            title.className = "type";
+            title.textContent = type;
+
+            const pre = document.createElement("pre");
+            pre.textContent = JSON.stringify(value, null, 2);
+
+            div.appendChild(title);
+            div.appendChild(pre);
+            container.appendChild(div);
+        });
+
+    } catch (err) {
+        container.innerHTML = "Error fetching DNS records";
+    }
+}
+</script>
+
+</body>
+</html>
