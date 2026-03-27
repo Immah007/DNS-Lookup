@@ -1,0 +1,14 @@
+{
+  "name": "dns-lookup-tool",
+  "version": "1.0.0",
+  "description": "Simple DNS lookup tool with Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
